@@ -1,0 +1,5 @@
+bin/UrhoTournament
+
+build-*Debug
+build-*Release
+*.pro.user
