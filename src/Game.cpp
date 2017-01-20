@@ -112,7 +112,7 @@ Game::Game(Context* context) :
     screenJoystickSettingsIndex_(M_MAX_UNSIGNED)
 
 {
-	singlePlayer = true;
+    singlePlayer = true;
 	gameOn = false;
 	drawDebug = false;
 	drawOctreeDebug = false;
@@ -140,8 +140,7 @@ Game::Game(Context* context) :
 void Game::Setup()
 {
 	// Modify engine startup parameters
-	engineParameters_["WindowTitle"] = GetTypeName();
-	engineParameters_["LogName"] = GetSubsystem<FileSystem>()->GetAppPreferencesDir("urho3d", "logs") + GetTypeName() + ".log";
+    engineParameters_["WindowTitle"] = "Urho Tournament";
 	engineParameters_["FullScreen"] = false;
 	engineParameters_["Headless"] = false;
     engineParameters_["ResourcePaths"] = "Data;CoreData;GameData";
@@ -169,7 +168,7 @@ void Game::Start()
 	CreateOverlays();
 
     SubscribeToEvent(scene_, E_SCENEUPDATE, URHO3D_HANDLER(Game, HandleUpdate));
-	if (scene_->GetComponent<PhysicsWorld>() != NULL)
+    if (scene_->GetComponent<PhysicsWorld>() != NULL)
         SubscribeToEvent(scene_->GetComponent<PhysicsWorld>(), E_PHYSICSPRESTEP, URHO3D_HANDLER(Game, HandleFixedUpdate));
     SubscribeToEvent(scene_, E_SCENEPOSTUPDATE, URHO3D_HANDLER(Game, HandlePostUpdate));
     SubscribeToEvent(E_POSTRENDERUPDATE, URHO3D_HANDLER(Game, HandlePostRenderUpdate));
@@ -322,14 +321,13 @@ void Game::InitScene()
 
 	scene_->LoadXML(*cache->GetFile("Scenes/NinjaSnowWar.xml"));
 
-	// On mobile devices render the shadowmap first. Also adjust the shadow quality for performance
-	String platform = GetPlatform();
+    // On mobile devices render the shadowmap first for better performance, adjust the cascaded shadows
+    String platform = GetPlatform();
 
 	if (platform == "Android" || platform == "iOS" || platform == "Raspberry Pi")
 	{
 		Renderer* renderer = GetSubsystem<Renderer>();
-		renderer->SetReuseShadowMaps(false);
-        renderer->SetShadowQuality(SHADOWQUALITY_SIMPLE_16BIT);
+        renderer->SetReuseShadowMaps(false);
 
 		// Adjust the directional light shadow range slightly further, as only the first
 		// cascade is supported
@@ -337,8 +335,7 @@ void Game::InitScene()
 		if (dirLightNode != NULL)
 		{
 			Light* dirLight = dirLightNode->GetComponent<Light>();
-			dirLight->SetShadowCascade(CascadeParameters(15.0f, 0.0f, 0.0f, 0.0f, 0.9f));
-			dirLight->SetShadowIntensity(0.333f);
+            dirLight->SetShadowCascade(CascadeParameters(15.0f, 0.0f, 0.0f, 0.0f, 0.9f));
 		}
 	}
 	Graphics* graphics = GetSubsystem<Graphics>();
@@ -839,8 +836,12 @@ void Game::HandleKeyDown(StringHash eventType, VariantMap& eventData)
 
 	if (key == KEY_F4)
 		drawOctreeDebug = !drawOctreeDebug;
+
+    if (key == KEY_F5)
+        GetSubsystem<DebugHud>()->Toggle(DEBUGHUD_SHOW_EVENTPROFILER);
+
 	// Take screenshot
-	else if (key == '9')
+    if (key == KEY_F6)
 	{
 		Graphics* graphics = GetSubsystem<Graphics>();
 		Image screenshot(context_);
@@ -849,13 +850,15 @@ void Game::HandleKeyDown(StringHash eventType, VariantMap& eventData)
 		screenshot.SavePNG(GetSubsystem<FileSystem>()->GetProgramDir() + "Data/Screenshot_" +
 			Time::GetTimeStamp().Replaced(':', '_').Replaced('.', '_').Replaced(' ', '_') + ".png");
 	}
+
 	// Allow pause only in singleplayer
-	if (key == 'P' && singlePlayer && !GetSubsystem<Console>()->IsVisible() && gameOn)
+    if (key == KEY_P && singlePlayer && !GetSubsystem<Console>()->IsVisible() && gameOn)
 	{
 		scene_->SetUpdateEnabled(!scene_->IsUpdateEnabled());
 		if (!scene_->IsUpdateEnabled())
 		{
-			SetMessage("PAUSED");
+            SetMessage("PAUSED");
+            GetSubsystem<Audio>()->PauseSoundType(SOUND_EFFECT);
 
 			// Open the settings joystick only if the controls screen joystick was already open
 			if (screenJoystickIndex_ >= 0)
@@ -869,6 +872,8 @@ void Game::HandleKeyDown(StringHash eventType, VariantMap& eventData)
 		else
 		{
 			SetMessage("");
+            GetSubsystem<Audio>()->ResumeSoundType(SOUND_EFFECT);
+
 			if (screenJoystickSettingsIndex_ >= 0)
 			{
 				input->SetScreenJoystickVisible(screenJoystickSettingsIndex_, false);
@@ -983,13 +988,13 @@ void Game::UpdateControls()
 		// and the key was already released
 		if (console == NULL || !console->IsVisible())
 		{
-			if (input->GetKeyDown('W'))
+            if (input->GetKeyDown(KEY_W))
 				playerControls.Set(CTRL_UP, true);
-			if (input->GetKeyDown('S'))
+            if (input->GetKeyDown(KEY_S))
 				playerControls.Set(CTRL_DOWN, true);
-			if (input->GetKeyDown('A'))
+            if (input->GetKeyDown(KEY_A))
 				playerControls.Set(CTRL_LEFT, true);
-			if (input->GetKeyDown('D'))
+            if (input->GetKeyDown(KEY_D))
 				playerControls.Set(CTRL_RIGHT, true);
 			if (input->GetKeyDown(KEY_LCTRL) || input->GetKeyPress(KEY_LCTRL))
 				playerControls.Set(CTRL_FIRE, true);
@@ -1210,13 +1215,13 @@ void Game::UpdateFreelookCamera()
 		if (input->GetKeyDown(KEY_LCTRL))
 			speedMultiplier = 0.1f;
 
-		if (input->GetKeyDown('W'))
+        if (input->GetKeyDown(KEY_W))
 			cameraNode_->Translate(Vector3(0, 0, 10) * timeStep * speedMultiplier);
-		if (input->GetKeyDown('S'))
+        if (input->GetKeyDown(KEY_S))
 			cameraNode_->Translate(Vector3(0, 0, -10) * timeStep * speedMultiplier);
-		if (input->GetKeyDown('A'))
+        if (input->GetKeyDown(KEY_A))
 			cameraNode_->Translate(Vector3(-10, 0, 0) * timeStep * speedMultiplier);
-		if (input->GetKeyDown('D'))
+        if (input->GetKeyDown(KEY_D))
 			cameraNode_->Translate(Vector3(10, 0, 0) * timeStep * speedMultiplier);
 
 		playerControls.yaw_ += mouseSensitivity * input->GetMouseMoveX();

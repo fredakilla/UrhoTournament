@@ -6,6 +6,7 @@
 #include <Urho3D/Resource/ResourceCache.h>
 #include <Urho3D/Audio/SoundSource3D.h>
 #include <Urho3D/Audio/Sound.h>
+#include <Urho3D/Audio/AudioEvents.h>
 #include <Urho3D/Container/Str.h>
 #include <Urho3D/Physics/PhysicsEvents.h>
 #include <Urho3D/Physics/RigidBody.h>
@@ -93,13 +94,26 @@ bool GameObject::Heal(int amount)
 void GameObject::PlaySound(const String& soundName)
 {
 	ResourceCache* cache = GetSubsystem<ResourceCache>();
-	// Create the sound channel
-	SoundSource3D* source = node_->CreateComponent<SoundSource3D>();
+
+    // Create the sound channel
+    SoundSource3D* soundNode = node_->CreateComponent<SoundSource3D>();
 	Sound* sound = cache->GetResource<Sound>(soundName);
 
-	source->SetDistanceAttenuation(2, 50, 1);
-	source->Play(sound);
-    source->SetAutoRemoveMode(REMOVE_COMPONENT);
+    // Subscribe to sound finished for cleaning up the source
+    SubscribeToEvent(soundNode, E_SOUNDFINISHED, URHO3D_HANDLER(GameObject, HandleSoundFinished)); //"SoundFinished", "HandleSoundFinished");
+
+    soundNode->SetDistanceAttenuation(2, 50, 1);
+    soundNode->Play(sound);
+    //soundNode->SetAutoRemoveMode(REMOVE_NODE);
+}
+
+void GameObject::HandleSoundFinished(StringHash eventType, VariantMap& eventData)
+{
+    using namespace SoundFinished;
+
+    Node* soundNode = static_cast<Node*>(eventData[P_NODE].GetPtr());
+    if (soundNode)
+        soundNode->Remove();
 }
 
 void GameObject::HandleNodeCollision(StringHash eventType, VariantMap& eventData)
@@ -132,17 +146,17 @@ void GameObject::WorldCollision(VariantMap& eventData)
 		Vector3 contactPosition = contacts.ReadVector3();
 		Vector3 contactNormal = contacts.ReadVector3();
 		float contactDistance = contacts.ReadFloat();
-		float contactImpulse = contacts.ReadFloat();
+        float contactImpulse = contacts.ReadFloat();
 
-		// If contact is below node center and mostly vertical, assume it's ground contact
-		if (contactPosition.y_ < node_->GetPosition().y_)
+        // If contact is below node center and pointing up, assume it's ground contact
+        if (contactPosition.y_ < node_->GetPosition().y_)
 		{
-			float level = Abs(contactNormal.y_);
+            float level = contactNormal.y_;
 			if (level > 0.75)
 				onGround = true;
 			else
-			{
-				// If contact is somewhere inbetween vertical/horizontal, is sliding a slope
+            {
+                // If contact is somewhere between vertical/horizontal, is sliding a slope
 				if (level > 0.1)
 					isSliding = true;
 			}

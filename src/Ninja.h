@@ -40,10 +40,7 @@ public:
     Ninja( Context* context );
     ~Ninja();
 	/// Register object factory.
-	static void RegisterObject(Context* context);
-
-	virtual void Start();
-
+    static void RegisterObject(Context* context);
 
 	 Quaternion GetAim();
 

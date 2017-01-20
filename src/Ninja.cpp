@@ -43,14 +43,14 @@ void Ninja::RegisterObject(Context* context)
 	context->RegisterFactory<Ninja>();
 }
 
-void Ninja::Start()
-{
-	aimX = node_->GetRotation().YawAngle();
-    SubscribeToEvent(node_, E_NODECOLLISION, URHO3D_HANDLER(Ninja, HandleNodeCollision));
-}
-
 void Ninja::DelayedStart()
 {
+    SubscribeToEvent(node_, E_NODECOLLISION, URHO3D_HANDLER(Ninja, HandleNodeCollision));
+
+    // Get horizontal aim from initial rotation
+    aimX = controls.yaw_ = node_->GetRotation().YawAngle();
+
+
 	// Start playing the idle animation immediately, even before the first physics update
 	AnimationController* animCtrl = node_->GetChildren()[0]->GetComponent<AnimationController>();
 	animCtrl->PlayExclusive("Models/NinjaSnowWar/Ninja_Idle3.ani", LAYER_MOVE, true);

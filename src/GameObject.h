@@ -78,7 +78,10 @@ public:
 	static Node* SpawnParticleEffect(const Node* node, const Vector3& pos, const String& effectName, float duration, CreateMode mode = REPLICATED);
 	static Node* SpawnObject(const Node* node,const Vector3& pos, const Quaternion& rot, const String& className);
 	static Node* SpawnSound(const Node* node, const Vector3& pos, const String& soundName, float duration);
-	//////////////////////////////////////////////////////////////////////////
+
+    void HandleSoundFinished(StringHash eventType, VariantMap& eventData);
+
+    //////////////////////////////////////////////////////////////////////////
 	/// Handle Collisions
 	//////////////////////////////////////////////////////////////////////////
 	virtual void HandleNodeCollision(StringHash eventType, VariantMap& eventData);
