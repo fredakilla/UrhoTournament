@@ -10,7 +10,7 @@ using namespace Urho3D;
 
 class FootSteps : public GameObject
 {
-    URHO3D_OBJECT(FootSteps, GameObject)
+    URHO3D_OBJECT(FootSteps, GameObject);
 public:
     //-------------------------------------------------------------------------
     // Constructors & Destructors

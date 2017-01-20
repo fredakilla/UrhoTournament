@@ -12,27 +12,27 @@ const int snowcratePoints = 250;
 
 class SnowCrate : public GameObject
 {
-    URHO3D_OBJECT(SnowCrate, GameObject)
+    URHO3D_OBJECT(SnowCrate, GameObject);
 public:
 
-	SnowCrate(Context* context);
-	~SnowCrate();
-	/// Register object factory.
-	static void RegisterObject(Context* context);
+    SnowCrate(Context* context);
+    ~SnowCrate();
+    /// Register object factory.
+    static void RegisterObject(Context* context);
 
-	/// Called when the component is added to a scene node. Other components may not yet exist.
-	virtual void Start();
+    /// Called when the component is added to a scene node. Other components may not yet exist.
+    virtual void Start();
 
-	virtual void FixedUpdate(float timeStep);
+    virtual void FixedUpdate(float timeStep);
 
-	
-	
+
+
 protected:
 
 
 private:
 
-	
+
 };
 
 #endif // SNOWCRATE_H

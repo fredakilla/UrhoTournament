@@ -20,7 +20,7 @@
 SnowCrate::SnowCrate(Context* context) : GameObject(context)
 {
     // Initialize variables to sensible defaults
-	health = maxHealth = snowcrateHealth;
+    health = maxHealth = snowcrateHealth;
 }
 
 
@@ -30,39 +30,39 @@ SnowCrate::~SnowCrate()
 
 void SnowCrate::Start()
 {
-	
+
     SubscribeToEvent(node_, E_NODECOLLISION, URHO3D_HANDLER(SnowCrate, HandleNodeCollision));
 }
 
 
 void SnowCrate::RegisterObject(Context* context)
 {
-	context->RegisterFactory<SnowCrate>();
+    context->RegisterFactory<SnowCrate>();
 }
 
 void SnowCrate::FixedUpdate(float timeStep)
 {
-	if (health <= 0)
-	{
-// 		{
-// 			VariantMap &eventData = GetEventDataMap();
-// 			eventData[GameObjectDie::P_NODE] = node_;
-// 			eventData[GameObjectDie::P_GAMEOBJECT] = this;
-// 			SendEvent(GE_DIE, eventData);
-// 		}
+    if (health <= 0)
+    {
+        // 		{
+        // 			VariantMap &eventData = GetEventDataMap();
+        // 			eventData[GameObjectDie::P_NODE] = node_;
+        // 			eventData[GameObjectDie::P_GAMEOBJECT] = this;
+        // 			SendEvent(GE_DIE, eventData);
+        // 		}
 
-		SpawnParticleEffect(node_, node_->GetPosition(), "Particle/SnowExplosionBig.xml", 2);
-		SpawnObject(node_, node_->GetPosition(), Quaternion(), "Potion");
+        SpawnParticleEffect(node_, node_->GetPosition(), "Particle/SnowExplosionBig.xml", 2);
+        SpawnObject(node_, node_->GetPosition(), Quaternion(), "Potion");
 
-		{
-			VariantMap &eventData = GetEventDataMap();
-			eventData[GameObjectPoints::P_POINTS] = snowcratePoints;
-			eventData[GameObjectPoints::P_RECIVER] = lastDamageCreatorID;
-			eventData[GameObjectPoints::P_DAMAGESIDE] = lastDamageSide;
-			SendEvent(GE_POINTS, eventData);
-		}
-		node_->Remove();
-	}
+        {
+            VariantMap &eventData = GetEventDataMap();
+            eventData[GameObjectPoints::P_POINTS] = snowcratePoints;
+            eventData[GameObjectPoints::P_RECIVER] = lastDamageCreatorID;
+            eventData[GameObjectPoints::P_DAMAGESIDE] = lastDamageSide;
+            SendEvent(GE_POINTS, eventData);
+        }
+        node_->Remove();
+    }
 }
 
 

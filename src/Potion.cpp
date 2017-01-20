@@ -13,13 +13,13 @@
 
 void Potion::RegisterObject(Context* context)
 {
-	context->RegisterFactory<Potion>();
+    context->RegisterFactory<Potion>();
 }
 
 Potion::Potion(Context* context) : GameObject(context)
 {
-	// Initialize variables to sensible defaults
-	healAmount = potionHealAmount;
+    // Initialize variables to sensible defaults
+    healAmount = potionHealAmount;
 }
 
 Potion::~Potion()
@@ -33,13 +33,13 @@ void Potion::Start()
 
 void Potion::ObjectCollision(GameObject* otherObject, VariantMap& eventData)
 {
-	if (healAmount > 0)
-	{
-		if (otherObject->Heal(healAmount))
-		{
-			// Could also remove the potion directly, but this way it gets removed on next update
-			healAmount = 0;
-			duration = 0.0f;
-		}
-	}
+    if (healAmount > 0)
+    {
+        if (otherObject->Heal(healAmount))
+        {
+            // Could also remove the potion directly, but this way it gets removed on next update
+            healAmount = 0;
+            duration = 0.0f;
+        }
+    }
 }

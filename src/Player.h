@@ -9,7 +9,7 @@
 
 namespace Urho3D
 {
-	class Connection;
+class Connection;
 }
 
 using namespace Urho3D;
@@ -17,16 +17,16 @@ using namespace Urho3D;
 class HiscoreEntry
 {
 public:
-	HiscoreEntry()
-	{
-		score = 0;
-	}
-	~HiscoreEntry()
-	{
+    HiscoreEntry()
+    {
+        score = 0;
+    }
+    ~HiscoreEntry()
+    {
 
-	}
-	int score;
-	String name;
+    }
+    int score;
+    String name;
 };
 
 
@@ -37,12 +37,12 @@ public:
 
     Player(  );
     ~Player();
-	int score;
-	String name;
-	unsigned int nodeID;
+    int score;
+    String name;
+    unsigned int nodeID;
 
-	SharedPtr<Connection> connection;
-	Controls lastControls;
+    SharedPtr<Connection> connection;
+    Controls lastControls;
 
 };
 

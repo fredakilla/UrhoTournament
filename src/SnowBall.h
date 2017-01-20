@@ -16,32 +16,32 @@ const int snowballDamage = 1;
 
 class SnowBall : public GameObject
 {
-    URHO3D_OBJECT(SnowBall, GameObject)
+    URHO3D_OBJECT(SnowBall, GameObject);
 public:
     //-------------------------------------------------------------------------
     // Constructors & Destructors
     //-------------------------------------------------------------------------
-	SnowBall(Context* context);
-	~SnowBall();
-	/// Register object factory.
-	static void RegisterObject(Context* context);
+    SnowBall(Context* context);
+    ~SnowBall();
+    /// Register object factory.
+    static void RegisterObject(Context* context);
 
-	/// Called when the component is added to a scene node. Other components may not yet exist.
-	virtual void Start();
+    /// Called when the component is added to a scene node. Other components may not yet exist.
+    virtual void Start();
 
-	virtual void ObjectCollision(GameObject* otherObject, VariantMap& eventData);
+    virtual void ObjectCollision(GameObject* otherObject, VariantMap& eventData);
 
-	virtual void FixedUpdate(float timeStep);
+    virtual void FixedUpdate(float timeStep);
 
-	virtual void WorldCollision(VariantMap& eventData);
+    virtual void WorldCollision(VariantMap& eventData);
 
 
 protected:
-	int hitDamage;
+    int hitDamage;
 
 private:
 
-	
+
 };
 
 #endif // SNOWBALL_H

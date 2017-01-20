@@ -24,8 +24,8 @@
 SnowBall::SnowBall(Context* context) : GameObject(context)
 {
     // Initialize variables to sensible defaults
-	duration = snowballDuration;
-	hitDamage = snowballDamage;
+    duration = snowballDuration;
+    hitDamage = snowballDamage;
 
 }
 
@@ -41,59 +41,59 @@ void SnowBall::Start()
 
 void SnowBall::ObjectCollision(GameObject* otherObject, VariantMap& eventData)
 {
-	if (hitDamage > 0)
-	{
-		RigidBody* body = node_->GetComponent<RigidBody>();
-		float l = body->GetLinearVelocity().Length();
-		if ((body->GetLinearVelocity().Length() >= snowballMinHitSpeed))
-		{			
-			if (side != otherObject->GetSide())
-			{			
-				otherObject->Damage(this, hitDamage);
-				// Create a temporary node for the hit sound
-				SpawnSound(node_, node_->GetPosition(), "Sounds/PlayerFistHit.wav", 0.2);
-			}
-			hitDamage = 0;
-		}
-	}
-	if (duration > snowballObjectHitDuration)
-		duration = snowballObjectHitDuration;
+    if (hitDamage > 0)
+    {
+        RigidBody* body = node_->GetComponent<RigidBody>();
+        float l = body->GetLinearVelocity().Length();
+        if ((body->GetLinearVelocity().Length() >= snowballMinHitSpeed))
+        {
+            if (side != otherObject->GetSide())
+            {
+                otherObject->Damage(this, hitDamage);
+                // Create a temporary node for the hit sound
+                SpawnSound(node_, node_->GetPosition(), "Sounds/PlayerFistHit.wav", 0.2);
+            }
+            hitDamage = 0;
+        }
+    }
+    if (duration > snowballObjectHitDuration)
+        duration = snowballObjectHitDuration;
 }
 
 void SnowBall::RegisterObject(Context* context)
 {
-	context->RegisterFactory<SnowBall>();
+    context->RegisterFactory<SnowBall>();
 }
 
 void SnowBall::FixedUpdate(float timeStep)
 {
-	// Apply damping when rolling on the ground, or near disappearing
-	RigidBody* body = node_->GetComponent<RigidBody>();
-	if ((onGround) || (duration < snowballGroundHitDuration))
-	{
-		Vector3 vel = body->GetLinearVelocity();
-		body->ApplyForce(Vector3(-snowballDampingForce * vel.x_, 0, -snowballDampingForce * vel.z_));
-	}
-	
-	// Disappear when duration expired
-	if (duration >= 0)
-	{
-		duration -= timeStep;
-		if (duration <= 0)
-		{		
-			SpawnParticleEffect(node_, node_->GetPosition(), "Particle/SnowExplosion.xml", 1);
-			node_->Remove();
-		}
-	}
+    // Apply damping when rolling on the ground, or near disappearing
+    RigidBody* body = node_->GetComponent<RigidBody>();
+    if ((onGround) || (duration < snowballGroundHitDuration))
+    {
+        Vector3 vel = body->GetLinearVelocity();
+        body->ApplyForce(Vector3(-snowballDampingForce * vel.x_, 0, -snowballDampingForce * vel.z_));
+    }
+
+    // Disappear when duration expired
+    if (duration >= 0)
+    {
+        duration -= timeStep;
+        if (duration <= 0)
+        {
+            SpawnParticleEffect(node_, node_->GetPosition(), "Particle/SnowExplosion.xml", 1);
+            node_->Remove();
+        }
+    }
 }
 
 void SnowBall::WorldCollision(VariantMap& eventData)
 {
-	GameObject::WorldCollision(eventData);
+    GameObject::WorldCollision(eventData);
 
-	// If hit the ground, disappear after a short while
-	if (duration > snowballGroundHitDuration)
-		duration = snowballGroundHitDuration;
+    // If hit the ground, disappear after a short while
+    if (duration > snowballGroundHitDuration)
+        duration = snowballGroundHitDuration;
 }
 
 

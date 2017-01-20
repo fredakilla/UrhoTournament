@@ -10,7 +10,7 @@
 
 namespace Urho3D
 {
-	class Scene;
+class Scene;
 }
 
 
@@ -55,72 +55,72 @@ const int SIDE_ENEMY = 2;
 
 class GameObject : public LogicComponent
 {
-    URHO3D_OBJECT(GameObject, LogicComponent)
+    URHO3D_OBJECT(GameObject, LogicComponent);
 public:
     GameObject( Context* context );
-	virtual ~GameObject();
+    virtual ~GameObject();
 
-	/// Register object factory.
-	static void RegisterObject(Context* context);
+    /// Register object factory.
+    static void RegisterObject(Context* context);
 
-	//////////////////////////////////////////////////////////////////////////
-	/// LogicComponent
-	//////////////////////////////////////////////////////////////////////////
-	/// Called on physics update, fixed timestep.
-	virtual void FixedUpdate(float timeStep);
+    //////////////////////////////////////////////////////////////////////////
+    /// LogicComponent
+    //////////////////////////////////////////////////////////////////////////
+    /// Called on physics update, fixed timestep.
+    virtual void FixedUpdate(float timeStep);
 
-	//////////////////////////////////////////////////////////////////////////
-	/// GameObject Actions
-	//////////////////////////////////////////////////////////////////////////
-	virtual bool Damage(GameObject* origin, int amount);
-	virtual bool Heal(int amount);
-	virtual void PlaySound(const String& soundName);
-	static Node* SpawnParticleEffect(const Node* node, const Vector3& pos, const String& effectName, float duration, CreateMode mode = REPLICATED);
-	static Node* SpawnObject(const Node* node,const Vector3& pos, const Quaternion& rot, const String& className);
-	static Node* SpawnSound(const Node* node, const Vector3& pos, const String& soundName, float duration);
+    //////////////////////////////////////////////////////////////////////////
+    /// GameObject Actions
+    //////////////////////////////////////////////////////////////////////////
+    virtual bool Damage(GameObject* origin, int amount);
+    virtual bool Heal(int amount);
+    virtual void PlaySound(const String& soundName);
+    static Node* SpawnParticleEffect(const Node* node, const Vector3& pos, const String& effectName, float duration, CreateMode mode = REPLICATED);
+    static Node* SpawnObject(const Node* node,const Vector3& pos, const Quaternion& rot, const String& className);
+    static Node* SpawnSound(const Node* node, const Vector3& pos, const String& soundName, float duration);
 
     void HandleSoundFinished(StringHash eventType, VariantMap& eventData);
 
     //////////////////////////////////////////////////////////////////////////
-	/// Handle Collisions
-	//////////////////////////////////////////////////////////////////////////
-	virtual void HandleNodeCollision(StringHash eventType, VariantMap& eventData);
-	virtual void WorldCollision(VariantMap& eventData);
-	virtual void ObjectCollision(GameObject* otherObject, VariantMap& eventData);
-	virtual void ResetWorldCollision();
+    /// Handle Collisions
+    //////////////////////////////////////////////////////////////////////////
+    virtual void HandleNodeCollision(StringHash eventType, VariantMap& eventData);
+    virtual void WorldCollision(VariantMap& eventData);
+    virtual void ObjectCollision(GameObject* otherObject, VariantMap& eventData);
+    virtual void ResetWorldCollision();
 
-	//////////////////////////////////////////////////////////////////////////
-	/// Getters/Setters
-	//////////////////////////////////////////////////////////////////////////
-	void SetDuration(float d) { duration = d; }
-	void SetSide(int s) { side = s; }
-	void SetCreatorID(unsigned origin) { creatorID = origin; }
-	void SetHealth(int hp);
-	void SetMaxHealth(int maxhp) { maxHealth = maxhp; }
-	void SetLastDamageSide(int last) { lastDamageSide = last; }
+    //////////////////////////////////////////////////////////////////////////
+    /// Getters/Setters
+    //////////////////////////////////////////////////////////////////////////
+    void SetDuration(float d) { duration = d; }
+    void SetSide(int s) { side = s; }
+    void SetCreatorID(unsigned origin) { creatorID = origin; }
+    void SetHealth(int hp);
+    void SetMaxHealth(int maxhp) { maxHealth = maxhp; }
+    void SetLastDamageSide(int last) { lastDamageSide = last; }
 
 
-	float GetDuration() const { return duration; }
-	int GetSide() { return side; }
-	unsigned GetCreatorID() { return creatorID; }
-	int GetHealth(){ return health; }
-	int GetMaxHealth() { return maxHealth; }
+    float GetDuration() const { return duration; }
+    int GetSide() { return side; }
+    unsigned GetCreatorID() { return creatorID; }
+    int GetHealth(){ return health; }
+    int GetMaxHealth() { return maxHealth; }
 
-	bool IsSliding() const { return isSliding; }
-	bool OnGround() const { return onGround; }
+    bool IsSliding() const { return isSliding; }
+    bool OnGround() const { return onGround; }
 protected:
 
-	bool onGround;
-	bool isSliding;
-	float duration;
+    bool onGround;
+    bool isSliding;
+    float duration;
 
-	int health;
-	int maxHealth;
+    int health;
+    int maxHealth;
 
-	int side;
-	int lastDamageSide;
-	unsigned int lastDamageCreatorID;
-	unsigned int creatorID;
+    int side;
+    int lastDamageSide;
+    unsigned int lastDamageCreatorID;
+    unsigned int creatorID;
 
 
 };

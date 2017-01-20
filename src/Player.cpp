@@ -11,23 +11,15 @@
 #include <Urho3D/DebugNew.h>
 
 Player::Player( ) : 
-	score(0),
-	nodeID(0)
+    score(0),
+    nodeID(0)
 {
-
 }
 
 
 Player::~Player()
 {
 }
-
-
-
-
-
-
-
 
 
 

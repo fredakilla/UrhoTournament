@@ -9,7 +9,7 @@
 
 namespace Urho3D
 {
-	class Quaternion;
+class Quaternion;
 }
 
 class AIController;
@@ -32,42 +32,42 @@ using namespace Urho3D;
 
 class Ninja : public GameObject
 {
-    URHO3D_OBJECT(Ninja, GameObject)
+    URHO3D_OBJECT(Ninja, GameObject);
 public:
     //-------------------------------------------------------------------------
     // Constructors & Destructors
     //-------------------------------------------------------------------------
     Ninja( Context* context );
     ~Ninja();
-	/// Register object factory.
+    /// Register object factory.
     static void RegisterObject(Context* context);
 
-	 Quaternion GetAim();
+    Quaternion GetAim();
 
-	 void SetControls(const Controls& newControls);
-	 void DeathUpdate(float timeStep);
+    void SetControls(const Controls& newControls);
+    void DeathUpdate(float timeStep);
 
-	 virtual void DelayedStart();
+    virtual void DelayedStart();
 
-	 virtual void FixedUpdate(float timeStep);
+    virtual void FixedUpdate(float timeStep);
 
-	 virtual bool Heal(int amount);
+    virtual bool Heal(int amount);
 
-	 bool  okToJump;
-	 bool  smoke;
-	 float inAirTime;
-	 float onGroundTime;
-	 float throwTime;
-	 float deathTime;
-	 float deathDir;
-	 float dirChangeTime;
-	 float aimX;
-	 float aimY;
-	 /// Movement controls. Assigned by the main program each frame.
-	 Controls controls;
-	 Controls prevControls;
+    bool  okToJump;
+    bool  smoke;
+    float inAirTime;
+    float onGroundTime;
+    float throwTime;
+    float deathTime;
+    float deathDir;
+    float dirChangeTime;
+    float aimX;
+    float aimY;
+    /// Movement controls. Assigned by the main program each frame.
+    Controls controls;
+    Controls prevControls;
 
-	 SharedPtr<AIController> controller;
+    SharedPtr<AIController> controller;
 protected:
 
 
