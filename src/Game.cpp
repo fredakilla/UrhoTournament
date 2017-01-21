@@ -100,7 +100,6 @@
 
 #include <Urho3D/DebugNew.h>
 
-//DEFINE_APPLICATION_MAIN(Game)
 URHO3D_DEFINE_APPLICATION_MAIN(Game)
 
 Game::Game(Context* context) :
@@ -167,8 +166,8 @@ void Game::Start()
     CreateCamera();
     CreateOverlays();
 
-    // set mouse visible during debug
-    GetSubsystem<Input>()->SetMouseVisible(true);
+    // set mouse visible during debug to avoid no mouse pointer on breakpoint.
+    //GetSubsystem<Input>()->SetMouseVisible(true);
 
     SubscribeToEvent(scene_, E_SCENEUPDATE, URHO3D_HANDLER(Game, HandleUpdate));
     if (scene_->GetComponent<PhysicsWorld>() != NULL)
