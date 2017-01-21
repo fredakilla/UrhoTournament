@@ -167,6 +167,9 @@ void Game::Start()
     CreateCamera();
     CreateOverlays();
 
+    // set mouse visible during debug
+    GetSubsystem<Input>()->SetMouseVisible(true);
+
     SubscribeToEvent(scene_, E_SCENEUPDATE, URHO3D_HANDLER(Game, HandleUpdate));
     if (scene_->GetComponent<PhysicsWorld>() != NULL)
         SubscribeToEvent(scene_->GetComponent<PhysicsWorld>(), E_PHYSICSPRESTEP, URHO3D_HANDLER(Game, HandleFixedUpdate));
