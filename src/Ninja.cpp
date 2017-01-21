@@ -233,7 +233,7 @@ void Ninja::FixedUpdate(float timeStep)
         RigidBody* snowballBody = snowball->GetComponent<RigidBody>();
         snowballBody->SetLinearVelocity(projectileVel);
 
-        GameObject* snowballObject = snowball->GetComponent<GameObject>();
+        GameObject* snowballObject = snowball->GetDerivedComponent<GameObject>();
         if (snowballObject)
         {
             snowballObject->SetSide(side);
