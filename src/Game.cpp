@@ -1242,9 +1242,9 @@ void Game::UpdateStatus()
     if (singlePlayer)
     {
         if (players.Size() > 0)
-            scoreText->SetText("Score " + players[0].score);
+            scoreText->SetText("Score " + String(players[0].score));
         if (hiscores.Size() > 0)
-            hiscoreText->SetText("Hiscore " + hiscores[0].score);
+            hiscoreText->SetText("Hiscore " + String(hiscores[0].score));
     }
 
     Node* playerNode = FindOwnNode();
