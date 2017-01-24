@@ -62,7 +62,10 @@ QMAKE_CXXFLAGS_RELEASE *= -O3
 
 CONFIG(debug,debug|release) {
     #message( debug )
-    DEFINES += \       
+    DEFINES += \
+        MAGIC_3D \
+        SHADER_ALPHATEST_WRAP \
+        ASSERT_DEBUG \
 } else {
     DEFINES += \        
 }
@@ -82,6 +85,7 @@ INCLUDEPATH += $${URHO3D}/include/Urho3D/ThirdParty
 LIBS += -L$${URHO3D}/lib
 LIBS += -L$${DESTDIR}
 
+unix:!macx:: LIBS += -lmagic3d
 unix:!macx:: LIBS += -lUrho3D
 
 win32: CONFIG(debug,debug|release) {
@@ -110,7 +114,10 @@ HEADERS += \
     Player.h \
     Potion.h \
     SnowBall.h \
-    SnowCrate.h
+    SnowCrate.h \
+    MagicParticleEffect.h \
+    MagicParticleEmitter.h \
+    Magic.h
 
 
 
@@ -125,5 +132,7 @@ SOURCES += \
     Player.cpp \
     Potion.cpp \
     SnowBall.cpp \
-    SnowCrate.cpp
+    SnowCrate.cpp \
+    MagicParticleEffect.cpp \
+    MagicParticleEmitter.cpp
 

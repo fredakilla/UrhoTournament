@@ -102,6 +102,8 @@
 
 
 #include <Urho3D/Graphics/Animation.h>
+#include "MagicParticleEffect.h"
+#include "MagicParticleEmitter.h"
 
 URHO3D_DEFINE_APPLICATION_MAIN(Game)
 
@@ -138,6 +140,9 @@ Game::Game(Context* context) :
     Potion::RegisterObject(context);
     SnowBall::RegisterObject(context);
     SnowCrate::RegisterObject(context);
+
+    MagicParticleEffect::RegisterObject(context);
+    MagicParticleEmitter::RegisterObject(context);
 }
 void Game::Setup()
 {
@@ -359,7 +364,6 @@ void Game::InitScene()
     object->SetCastShadows(true);
     AnimationController* animCtrl = node->CreateComponent<AnimationController>();
     animCtrl->Play("Models/Galtrilian/Galtrilian_RunForward.ani", 0, true, 0.2);
-
 }
 
 void Game::InitNetworking()

@@ -24,7 +24,9 @@ const char* GALTRILIAN_ANIM_JUMP = "Models/Galtrilian/Galtrilian_Jump.ani";
 const char* GALTRILIAN_ANIM_ATTACK_1 = "Models/Galtrilian/Galtrilian_1H_Attack.ani";
 const char* GALTRILIAN_ANIM_ATTACK_2 = "Models/Galtrilian/Galtrilian_2H_Attack.ani";
 
-
+#include <Urho3D/Urho3DAll.h>
+#include "MagicParticleEffect.h"
+#include "MagicParticleEmitter.h"
 
 Ninja::Ninja(Context* context) : GameObject(context)
 {
@@ -64,6 +66,33 @@ void Ninja::DelayedStart()
     // Start playing the idle animation immediately, even before the first physics update
     AnimationController* animCtrl = node_->GetChildren()[0]->GetComponent<AnimationController>();
     animCtrl->PlayExclusive(GALTRILIAN_ANIM_IDLE, LAYER_MOVE, true);
+
+
+
+
+
+
+    // TEST : Attach fire particle to hand
+
+    ResourceCache* cache = GetSubsystem<ResourceCache>();
+
+    Node* hand = node_->GetChild("RightHandMiddle1", true);
+    Node* n = hand->CreateChild("test");
+    n->SetScale(0.25f);
+    StaticModel* sm = n->CreateComponent<StaticModel>();
+    sm->SetModel(cache->GetResource<Model>("Models/Box.mdl"));
+    sm->SetMaterial(cache->GetResource<Material>("Materials/Stone.xml"));
+
+    MagicParticleEffect* _magicEffects = cache->GetResource<MagicParticleEffect>("MagicParticles/particles3d/fire.ptc");
+    MagicParticleEmitter* em = n->CreateComponent<MagicParticleEmitter>();
+    em->SetEffect(_magicEffects, 3);             // use emitter in file at specified index
+    em->SetOverrideEmitterRotation(true);                   // override any emitter built-in rotation, and prefer urho node based rotation.
+    em->SetParticlesMoveWithEmitter(false);                 // new emitted particles will be independents from node movements
+    em->SetParticlesRotateWithEmitter(false);               // new emitted particles will be independents from node rotations
+    em->SetEmitterPosition(Vector3(0,0,0));                 // set initial emitter position (offset from node pos)
+
+
+
 }
 
 Urho3D::Quaternion Ninja::GetAim()
@@ -243,7 +272,7 @@ void Ninja::FixedUpdate(float timeStep)
         throwTime -= timeStep;
 
     // Start fading the attack animation after it has progressed past a certain point
-    if (animCtrl->GetTime(GALTRILIAN_ANIM_ATTACK_1) > 0.1)
+    if (animCtrl->GetTime(GALTRILIAN_ANIM_ATTACK_1) > 0.8)
         animCtrl->Fade(GALTRILIAN_ANIM_ATTACK_1, 0.0, 0.5);
 
     if ((controls.IsPressed(CTRL_FIRE, prevControls)) && (throwTime <= 0))
@@ -252,6 +281,7 @@ void Ninja::FixedUpdate(float timeStep)
 
         animCtrl->Play(GALTRILIAN_ANIM_ATTACK_1, LAYER_ATTACK, false, 0.0);
         animCtrl->SetTime(GALTRILIAN_ANIM_ATTACK_1, 0.0); // Always play from beginning
+        animCtrl->SetSpeed(GALTRILIAN_ANIM_ATTACK_1, 2.0);
 
         Node* snowball = SpawnObject(node_, node_->GetPosition()+ vel * timeStep + q * ninjaThrowPosition, GetAim(), "SnowBall");
         RigidBody* snowballBody = snowball->GetComponent<RigidBody>();
@@ -329,9 +359,9 @@ void Ninja::DeathUpdate(float timeStep)
         // Backward death
         animCtrl->StopLayer(LAYER_ATTACK, 0.1f);
         animCtrl->PlayExclusive(GALTRILIAN_ANIM_DEATH, LAYER_MOVE, false, 0.2f);
-        animCtrl->SetSpeed(GALTRILIAN_ANIM_DEATH, 0.5f);
-        if ((deathTime >= 0.3f) && (deathTime < 0.8f))
-            modelNode->Translate(Vector3(0.0f, 0.0f, 4.25f * timeStep));
+        animCtrl->SetSpeed(GALTRILIAN_ANIM_DEATH, 1.2f);
+        /*if ((deathTime >= 0.3f) && (deathTime < 0.8f))
+            modelNode->Translate(Vector3(0.0f, 0.0f, 4.25f * timeStep));*/
     }
     else if (deathDir > 0.0f)
     {
@@ -339,8 +369,8 @@ void Ninja::DeathUpdate(float timeStep)
         animCtrl->StopLayer(LAYER_ATTACK, 0.1f);
         animCtrl->PlayExclusive(GALTRILIAN_ANIM_DEATH, LAYER_MOVE, false, 0.2f);
         animCtrl->SetSpeed(GALTRILIAN_ANIM_DEATH, 0.5f);
-        if ((deathTime >= 0.4f) && (deathTime < 0.8f))
-            modelNode->Translate(Vector3(0.0f, 0.0f, -4.25f * timeStep));
+        /*if ((deathTime >= 0.4f) && (deathTime < 0.8f))
+            modelNode->Translate(Vector3(0.0f, 0.0f, -4.25f * timeStep));*/
     }
 
     // Create smokecloud just before vanishing
