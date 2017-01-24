@@ -14,6 +14,16 @@
 #include <Urho3D/DebugNew.h>
 
 
+const char* GALTRILIAN_ANIM_IDLE = "Models/Galtrilian/Galtrilian_Idle.ani";
+const char* GALTRILIAN_ANIM_DEATH = "Models/Galtrilian/Galtrilian_Death.ani";
+const char* GALTRILIAN_ANIM_RUNFORWARD = "Models/Galtrilian/Galtrilian_RunForward.ani";
+const char* GALTRILIAN_ANIM_RUNBACK = "Models/Galtrilian/Galtrilian_RunBack.ani";
+const char* GALTRILIAN_ANIM_RUNLEFT = "Models/Galtrilian/Galtrilian_RunLeft.ani";
+const char* GALTRILIAN_ANIM_RUNRIGHT = "Models/Galtrilian/Galtrilian_RunRight.ani";
+const char* GALTRILIAN_ANIM_JUMP = "Models/Galtrilian/Galtrilian_Jump.ani";
+const char* GALTRILIAN_ANIM_ATTACK_1 = "Models/Galtrilian/Galtrilian_1H_Attack.ani";
+const char* GALTRILIAN_ANIM_ATTACK_2 = "Models/Galtrilian/Galtrilian_2H_Attack.ani";
+
 
 
 Ninja::Ninja(Context* context) : GameObject(context)
@@ -53,7 +63,7 @@ void Ninja::DelayedStart()
 
     // Start playing the idle animation immediately, even before the first physics update
     AnimationController* animCtrl = node_->GetChildren()[0]->GetComponent<AnimationController>();
-    animCtrl->PlayExclusive("Models/NinjaSnowWar/Ninja_Idle3.ani", LAYER_MOVE, true);
+    animCtrl->PlayExclusive(GALTRILIAN_ANIM_IDLE, LAYER_MOVE, true);
 }
 
 Urho3D::Quaternion Ninja::GetAim()
@@ -127,28 +137,42 @@ void Ninja::FixedUpdate(float timeStep)
             float animDir = 1.0f;
             Vector3 force(0, 0, 0);
             if (controls.IsDown(CTRL_UP))
+            {
                 force += q * Vector3(0, 0, 1);
+
+                animCtrl->PlayExclusive(GALTRILIAN_ANIM_RUNFORWARD, LAYER_MOVE, true, 0.2);
+                animCtrl->SetSpeed(GALTRILIAN_ANIM_RUNFORWARD, animDir * 1.0);
+            }
             if (controls.IsDown(CTRL_DOWN))
             {
                 animDir = -1.0f;
                 force += q * Vector3(0, 0, -1);
+
+                animCtrl->PlayExclusive(GALTRILIAN_ANIM_RUNBACK, LAYER_MOVE, true, 0.2);
+                animCtrl->SetSpeed(GALTRILIAN_ANIM_RUNBACK, animDir * 1.0);
             }
             if (controls.IsDown(CTRL_LEFT))
             {
                 sideMove = true;
                 force += q * Vector3(-1, 0, 0);
+
+                animCtrl->PlayExclusive(GALTRILIAN_ANIM_RUNLEFT, LAYER_MOVE, true, 0.2);
+                animCtrl->SetSpeed(GALTRILIAN_ANIM_RUNLEFT, animDir * 1.0);
             }
             if (controls.IsDown(CTRL_RIGHT))
             {
                 sideMove = true;
                 force += q * Vector3(1, 0, 0);
+
+                animCtrl->PlayExclusive(GALTRILIAN_ANIM_RUNRIGHT, LAYER_MOVE, true, 0.2);
+                animCtrl->SetSpeed(GALTRILIAN_ANIM_RUNRIGHT, animDir * 1.0);
             }
             // Normalize so that diagonal strafing isn't faster
             force.Normalize();
             force *= ninjaMoveForce;
             body->ApplyImpulse(force);
 
-            // Walk or sidestep animation
+            /*// Walk or sidestep animation
             if (sideMove)
             {
                 animCtrl->PlayExclusive("Models/NinjaSnowWar/Ninja_Stealth.ani", LAYER_MOVE, true, 0.2);
@@ -158,12 +182,12 @@ void Ninja::FixedUpdate(float timeStep)
             {
                 animCtrl->PlayExclusive("Models/NinjaSnowWar/Ninja_Walk.ani", LAYER_MOVE, true, 0.2);
                 animCtrl->SetSpeed("Models/NinjaSnowWar/Ninja_Walk.ani", animDir * 1.6);
-            }
+            }*/
         }
         else
         {
             // Idle animation
-            animCtrl->PlayExclusive("Models/NinjaSnowWar/Ninja_Idle3.ani", LAYER_MOVE, true, 0.2);
+            animCtrl->PlayExclusive(GALTRILIAN_ANIM_IDLE, LAYER_MOVE, true, 0.2);
         }
 
         // Overall damping to cap maximum speed
@@ -178,8 +202,8 @@ void Ninja::FixedUpdate(float timeStep)
                 body->SetPosition(body->GetPosition() + Vector3(0, 0.03, 0));
                 body->ApplyImpulse(Vector3(0, ninjaJumpForce, 0));
                 inAirTime = 1.0f;
-                animCtrl->PlayExclusive("Models/NinjaSnowWar/Ninja_JumpNoHeight.ani", LAYER_MOVE, false, 0.1);
-                animCtrl->SetTime("Models/NinjaSnowWar/Ninja_JumpNoHeight.ani", 0.0); // Always play from beginning
+                animCtrl->PlayExclusive(GALTRILIAN_ANIM_JUMP, LAYER_MOVE, false, 0.1);
+                animCtrl->SetTime(GALTRILIAN_ANIM_JUMP, 0.0); // Always play from beginning
                 okToJump = false;
             }
         }
@@ -211,7 +235,7 @@ void Ninja::FixedUpdate(float timeStep)
 
         // Falling/jumping/sliding animation
         if (inAirTime > 0.1f)
-            animCtrl->PlayExclusive("Models/NinjaSnowWar/Ninja_JumpNoHeight.ani", LAYER_MOVE, false, 0.1);
+            animCtrl->PlayExclusive(GALTRILIAN_ANIM_JUMP, LAYER_MOVE, false, 0.1);
     }
 
     // Shooting
@@ -219,15 +243,15 @@ void Ninja::FixedUpdate(float timeStep)
         throwTime -= timeStep;
 
     // Start fading the attack animation after it has progressed past a certain point
-    if (animCtrl->GetTime("Models/NinjaSnowWar/Ninja_Attack1.ani") > 0.1)
-        animCtrl->Fade("Models/NinjaSnowWar/Ninja_Attack1.ani", 0.0, 0.5);
+    if (animCtrl->GetTime(GALTRILIAN_ANIM_ATTACK_1) > 0.1)
+        animCtrl->Fade(GALTRILIAN_ANIM_ATTACK_1, 0.0, 0.5);
 
     if ((controls.IsPressed(CTRL_FIRE, prevControls)) && (throwTime <= 0))
     {
         Vector3 projectileVel = GetAim() * ninjaThrowVelocity;
 
-        animCtrl->Play("Models/NinjaSnowWar/Ninja_Attack1.ani", LAYER_ATTACK, false, 0.0);
-        animCtrl->SetTime("Models/NinjaSnowWar/Ninja_Attack1.ani", 0.0); // Always play from beginning
+        animCtrl->Play(GALTRILIAN_ANIM_ATTACK_1, LAYER_ATTACK, false, 0.0);
+        animCtrl->SetTime(GALTRILIAN_ANIM_ATTACK_1, 0.0); // Always play from beginning
 
         Node* snowball = SpawnObject(node_, node_->GetPosition()+ vel * timeStep + q * ninjaThrowPosition, GetAim(), "SnowBall");
         RigidBody* snowballBody = snowball->GetComponent<RigidBody>();
@@ -304,8 +328,8 @@ void Ninja::DeathUpdate(float timeStep)
     {
         // Backward death
         animCtrl->StopLayer(LAYER_ATTACK, 0.1f);
-        animCtrl->PlayExclusive("Models/NinjaSnowWar/Ninja_Death1.ani", LAYER_MOVE, false, 0.2f);
-        animCtrl->SetSpeed("Models/NinjaSnowWar/Ninja_Death1.ani", 0.5f);
+        animCtrl->PlayExclusive(GALTRILIAN_ANIM_DEATH, LAYER_MOVE, false, 0.2f);
+        animCtrl->SetSpeed(GALTRILIAN_ANIM_DEATH, 0.5f);
         if ((deathTime >= 0.3f) && (deathTime < 0.8f))
             modelNode->Translate(Vector3(0.0f, 0.0f, 4.25f * timeStep));
     }
@@ -313,8 +337,8 @@ void Ninja::DeathUpdate(float timeStep)
     {
         // Forward death
         animCtrl->StopLayer(LAYER_ATTACK, 0.1f);
-        animCtrl->PlayExclusive("Models/NinjaSnowWar/Ninja_Death2.ani", LAYER_MOVE, false, 0.2f);
-        animCtrl->SetSpeed("Models/NinjaSnowWar/Ninja_Death2.ani", 0.5f);
+        animCtrl->PlayExclusive(GALTRILIAN_ANIM_DEATH, LAYER_MOVE, false, 0.2f);
+        animCtrl->SetSpeed(GALTRILIAN_ANIM_DEATH, 0.5f);
         if ((deathTime >= 0.4f) && (deathTime < 0.8f))
             modelNode->Translate(Vector3(0.0f, 0.0f, -4.25f * timeStep));
     }

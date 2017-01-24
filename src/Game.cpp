@@ -100,6 +100,9 @@
 
 #include <Urho3D/DebugNew.h>
 
+
+#include <Urho3D/Graphics/Animation.h>
+
 URHO3D_DEFINE_APPLICATION_MAIN(Game)
 
 Game::Game(Context* context) :
@@ -344,6 +347,19 @@ void Game::InitScene()
     // Precache shaders if possible
     if (!engine_->IsHeadless() && cache->Exists("NinjaSnowWarShaders.xml"))
         graphics->PrecacheShaders(*cache->GetFile("NinjaSnowWarShaders.xml"));
+
+
+
+
+    // TO DELETE : Test animated model
+    Node* node = scene_->CreateChild("");
+    AnimatedModel* object = node->CreateComponent<AnimatedModel>();
+    object->SetModel(cache->GetResource<Model>("Models/Galtrilian/Galtrilian.mdl"));
+    object->SetMaterial(cache->GetResource<Material>("Models/Galtrilian/Materials/Galtrilian_Material.xml"));
+    object->SetCastShadows(true);
+    AnimationController* animCtrl = node->CreateComponent<AnimationController>();
+    animCtrl->Play("Models/Galtrilian/Galtrilian_RunForward.ani", 0, true, 0.2);
+
 }
 
 void Game::InitNetworking()
@@ -483,7 +499,7 @@ void Game::SpawnPlayer(Connection* connection)
     else
         spawnPosition = Vector3(Random(spawnAreaSize) - spawnAreaSize * 0.5f, 0.97f, Random(spawnAreaSize) - spawnAreaSize);
 
-    Node* playerNode = GameObject::SpawnObject(scene_, spawnPosition, Quaternion(), "Ninja");
+    Node* playerNode = GameObject::SpawnObject(scene_, spawnPosition, Quaternion(), "Galtrilian");
     // Set owner connection. Owned nodes are always updated to the owner at full frequency
     playerNode->SetOwner(connection);
     playerNode->SetName("Player");
@@ -1148,7 +1164,7 @@ void Game::SpawnObjects(float timeStep)
             dir *= 90;
             Quaternion rotation(0.0f,(float) dir, 0.0f);
 
-            Node* enemyNode = GameObject::SpawnObject(scene_, rotation * Vector3(offset, 10, -120), rotation, "Ninja");
+            Node* enemyNode = GameObject::SpawnObject(scene_, rotation * Vector3(offset, 10, -120), rotation, "Galtrilian");
 
             // Initialize variables
             Ninja* enemyNinja = enemyNode->GetComponent<Ninja>();
