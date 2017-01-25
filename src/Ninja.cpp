@@ -14,15 +14,15 @@
 #include <Urho3D/DebugNew.h>
 
 
-const char* GALTRILIAN_ANIM_IDLE = "Models/Galtrilian/Galtrilian_Idle.ani";
+const char* GALTRILIAN_ANIM_IDLE = "Models/Galtrilian/standing_idle.ani";
 const char* GALTRILIAN_ANIM_DEATH = "Models/Galtrilian/Galtrilian_Death.ani";
-const char* GALTRILIAN_ANIM_RUNFORWARD = "Models/Galtrilian/Galtrilian_RunForward.ani";
-const char* GALTRILIAN_ANIM_RUNBACK = "Models/Galtrilian/Galtrilian_RunBack.ani";
-const char* GALTRILIAN_ANIM_RUNLEFT = "Models/Galtrilian/Galtrilian_RunLeft.ani";
-const char* GALTRILIAN_ANIM_RUNRIGHT = "Models/Galtrilian/Galtrilian_RunRight.ani";
-const char* GALTRILIAN_ANIM_JUMP = "Models/Galtrilian/Galtrilian_Jump.ani";
-const char* GALTRILIAN_ANIM_ATTACK_1 = "Models/Galtrilian/Galtrilian_1H_Attack.ani";
-const char* GALTRILIAN_ANIM_ATTACK_2 = "Models/Galtrilian/Galtrilian_2H_Attack.ani";
+const char* GALTRILIAN_ANIM_RUNFORWARD = "Models/Galtrilian/Standing_Run_Forward.ani";
+const char* GALTRILIAN_ANIM_RUNBACK = "Models/Galtrilian/Standing_Run_Back.ani";
+const char* GALTRILIAN_ANIM_RUNLEFT = "Models/Galtrilian/Standing_Run_Left.ani";
+const char* GALTRILIAN_ANIM_RUNRIGHT = "Models/Galtrilian/Standing_Run_Right.ani";
+const char* GALTRILIAN_ANIM_JUMP = "Models/Galtrilian/Standing_Jump.ani";
+const char* GALTRILIAN_ANIM_ATTACK_1 = "Models/Galtrilian/Standing_1H_Magic_Attack_01.ani";
+const char* GALTRILIAN_ANIM_ATTACK_2 = "Models/Galtrilian/Standing_2H_Magic_Attack_02.ani";
 
 #include <Urho3D/Urho3DAll.h>
 #include "MagicParticleEffect.h"

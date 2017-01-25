@@ -363,7 +363,7 @@ void Game::InitScene()
     object->SetMaterial(cache->GetResource<Material>("Models/Galtrilian/Materials/Galtrilian_Material.xml"));
     object->SetCastShadows(true);
     AnimationController* animCtrl = node->CreateComponent<AnimationController>();
-    animCtrl->Play("Models/Galtrilian/Galtrilian_RunForward.ani", 0, true, 0.2);
+    animCtrl->Play("Models/Galtrilian/Standing_Run_Forward.ani", 0, true, 0.2);
 }
 
 void Game::InitNetworking()
