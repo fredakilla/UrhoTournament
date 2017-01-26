@@ -357,13 +357,38 @@ void Game::InitScene()
 
 
     // TO DELETE : Test animated model
-    Node* node = scene_->CreateChild("");
-    AnimatedModel* object = node->CreateComponent<AnimatedModel>();
-    object->SetModel(cache->GetResource<Model>("Models/Galtrilian/Galtrilian.mdl"));
-    object->SetMaterial(cache->GetResource<Material>("Models/Galtrilian/Materials/Galtrilian_Material.xml"));
-    object->SetCastShadows(true);
-    AnimationController* animCtrl = node->CreateComponent<AnimationController>();
-    animCtrl->Play("Models/Galtrilian/Standing_Run_Forward.ani", 0, true, 0.2);
+    {
+        Node* node = scene_->CreateChild("");
+        AnimatedModel* object = node->CreateComponent<AnimatedModel>();
+        object->SetModel(cache->GetResource<Model>("Models/Bot/Bot.mdl"));
+        object->SetMaterial(1, cache->GetResource<Material>("Models/Bot/Materials/Bot_Surface_MAT.xml") );
+        object->SetMaterial(0, cache->GetResource<Material>("Models/Bot/Materials/Bot_Joints_MAT.xml") );
+        object->SetCastShadows(true);
+        AnimationController* animCtrl = node->CreateComponent<AnimationController>();
+        animCtrl->Play("Models/Bot/stable_sword_outward_slash.ani", 0, true, 0.2);
+    }
+
+    {
+        Node* ninjaNode = scene_->CreateChild("NinjaNode");
+        ninjaNode->SetPosition(Vector3(2,0,0));
+        AnimatedModel* animatedModel = ninjaNode->CreateComponent<AnimatedModel>();
+        animatedModel->SetModel(cache->GetResource<Model>("Models/Bot/Bot.mdl"));
+        animatedModel->SetMaterial(1, cache->GetResource<Material>("Models/Bot/Materials/Bot_Surface_MAT.xml") );
+        animatedModel->SetMaterial(0, cache->GetResource<Material>("Models/Bot/Materials/Bot_Joints_MAT.xml") );
+        animatedModel->SetCastShadows(true);
+
+        AnimationController* animCtrl1 = ninjaNode->CreateComponent<AnimationController>();
+
+        const char * ani1 = "Models/Bot/standard_run.ani";
+        const char * ani2 = "Models/Bot/stable_sword_outward_slash.ani";
+
+
+        animCtrl1->Play(ani1, 0, true, 0);
+        animCtrl1->Play(ani2, 1, true, 0);
+
+        animCtrl1->SetSpeed(ani2, 1.0f);
+        animCtrl1->SetStartBone(ani2, "mixamorig:RightShoulder");
+    }
 }
 
 void Game::InitNetworking()
