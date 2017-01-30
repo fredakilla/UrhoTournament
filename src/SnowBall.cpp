@@ -18,7 +18,8 @@
 #include <Urho3D/DebugNew.h>
 
 
-
+#include "MagicParticleEffect.h"
+#include "MagicParticleEmitter.h"
 
 
 SnowBall::SnowBall(Context* context) : GameObject(context)
@@ -26,6 +27,8 @@ SnowBall::SnowBall(Context* context) : GameObject(context)
     // Initialize variables to sensible defaults
     duration = snowballDuration;
     hitDamage = snowballDamage;
+
+
 
 }
 
@@ -37,6 +40,24 @@ SnowBall::~SnowBall()
 void SnowBall::Start()
 {
     SubscribeToEvent(node_, E_NODECOLLISION, URHO3D_HANDLER(SnowBall, HandleNodeCollision));
+
+
+}
+
+
+void SnowBall::DelayedStart()
+{
+    ResourceCache* cache = GetSubsystem<ResourceCache>();
+    MagicParticleEffect* _magicEffects = cache->GetResource<MagicParticleEffect>("MagicParticles/particles3d/fire.ptc");
+    MagicParticleEmitter* em = node_->CreateComponent<MagicParticleEmitter>();
+    em->SetEffect(_magicEffects, 3);             // use emitter in file at specified index
+    em->SetOverrideEmitterRotation(true);                   // override any emitter built-in rotation, and prefer urho node based rotation.
+    em->SetParticlesMoveWithEmitter(false);                 // new emitted particles will be independents from node movements
+    em->SetParticlesRotateWithEmitter(false);               // new emitted particles will be independents from node rotations
+    em->SetEmitterPosition(Vector3(0,0,0));                 // set initial emitter position (offset from node pos)
+    //em->SetEmitterPosition();
+    node_->SetScale(0.5);
+
 }
 
 void SnowBall::ObjectCollision(GameObject* otherObject, VariantMap& eventData)

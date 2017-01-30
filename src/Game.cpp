@@ -175,7 +175,7 @@ void Game::Start()
     CreateOverlays();
 
     // set mouse visible during debug to avoid no mouse pointer on breakpoint.
-    //GetSubsystem<Input>()->SetMouseVisible(true);
+    GetSubsystem<Input>()->SetMouseVisible(true);
 
     SubscribeToEvent(scene_, E_SCENEUPDATE, URHO3D_HANDLER(Game, HandleUpdate));
     if (scene_->GetComponent<PhysicsWorld>() != NULL)

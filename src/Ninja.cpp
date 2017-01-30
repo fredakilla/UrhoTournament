@@ -66,33 +66,6 @@ void Ninja::DelayedStart()
     // Start playing the idle animation immediately, even before the first physics update
     AnimationController* animCtrl = node_->GetChildren()[0]->GetComponent<AnimationController>();
     animCtrl->PlayExclusive(GALTRILIAN_ANIM_IDLE, LAYER_MOVE, true);
-
-
-
-
-
-
-    // TEST : Attach fire particle to hand
-
-    ResourceCache* cache = GetSubsystem<ResourceCache>();
-
-    Node* hand = node_->GetChild("RightHandMiddle1", true);
-    Node* n = hand->CreateChild("test");
-    n->SetScale(0.25f);
-    StaticModel* sm = n->CreateComponent<StaticModel>();
-    sm->SetModel(cache->GetResource<Model>("Models/Box.mdl"));
-    sm->SetMaterial(cache->GetResource<Material>("Materials/Stone.xml"));
-
-    MagicParticleEffect* _magicEffects = cache->GetResource<MagicParticleEffect>("MagicParticles/particles3d/fire.ptc");
-    MagicParticleEmitter* em = n->CreateComponent<MagicParticleEmitter>();
-    em->SetEffect(_magicEffects, 3);             // use emitter in file at specified index
-    em->SetOverrideEmitterRotation(true);                   // override any emitter built-in rotation, and prefer urho node based rotation.
-    em->SetParticlesMoveWithEmitter(false);                 // new emitted particles will be independents from node movements
-    em->SetParticlesRotateWithEmitter(false);               // new emitted particles will be independents from node rotations
-    em->SetEmitterPosition(Vector3(0,0,0));                 // set initial emitter position (offset from node pos)
-
-
-
 }
 
 Urho3D::Quaternion Ninja::GetAim()
@@ -272,16 +245,17 @@ void Ninja::FixedUpdate(float timeStep)
         throwTime -= timeStep;
 
     // Start fading the attack animation after it has progressed past a certain point
-    if (animCtrl->GetTime(GALTRILIAN_ANIM_ATTACK_1) > 0.8)
-        animCtrl->Fade(GALTRILIAN_ANIM_ATTACK_1, 0.0, 0.5);
+    //if (animCtrl->GetTime(GALTRILIAN_ANIM_ATTACK_1) > 2.0)
+    //    animCtrl->Fade(GALTRILIAN_ANIM_ATTACK_1, 0.0, 0.5);
 
     if ((controls.IsPressed(CTRL_FIRE, prevControls)) && (throwTime <= 0))
     {
         Vector3 projectileVel = GetAim() * ninjaThrowVelocity;
 
-        animCtrl->Play(GALTRILIAN_ANIM_ATTACK_1, LAYER_ATTACK, false, 0.0);
+        animCtrl->Play(GALTRILIAN_ANIM_ATTACK_1, LAYER_ATTACK, false, 1.0);
         animCtrl->SetTime(GALTRILIAN_ANIM_ATTACK_1, 0.0); // Always play from beginning
         animCtrl->SetSpeed(GALTRILIAN_ANIM_ATTACK_1, 2.0);
+        animCtrl->SetAutoFade(GALTRILIAN_ANIM_ATTACK_1, 1.0f);
 
         Node* snowball = SpawnObject(node_, node_->GetPosition()+ vel * timeStep + q * ninjaThrowPosition, GetAim(), "SnowBall");
         RigidBody* snowballBody = snowball->GetComponent<RigidBody>();
@@ -297,6 +271,7 @@ void Ninja::FixedUpdate(float timeStep)
         PlaySound("Sounds/NutThrow.wav");
         throwTime = ninjaThrowDelay;
     }
+
 
     prevControls = controls;
     ResetWorldCollision();

@@ -35,6 +35,8 @@ public:
 
     virtual void WorldCollision(VariantMap& eventData);
 
+    void DelayedStart();
+
 
 protected:
     int hitDamage;
